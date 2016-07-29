@@ -22,7 +22,7 @@
   '[pandeiro.boot-http    :refer [serve]])
 
 (deftask dev
-  "Build castra-simple for local development."
+  "Build ws-simple for local development."
   []
   (comp
     (serve
@@ -37,7 +37,7 @@
     (cljs)))
 
 (deftask prod
-  "Build castra-simple for production deployment."
+  "Build ws-simple for production deployment."
   []
   (comp
     (hoplon)
