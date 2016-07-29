@@ -12,7 +12,7 @@
                   [org.clojure/clojure       "1.9.0-alpha10"]
                   [org.clojure/clojurescript "1.9.93"]
                   [pandeiro/boot-http        "0.7.3"]
-                  [ring                      "1.5.0"]
+                  [http-kit "2.2.0"]
                   [javax.servlet/servlet-api "2.5"]
                   [ring/ring-defaults        "0.2.1"]]
   :source-paths   #{"src"}
@@ -32,7 +32,9 @@
     (serve
       :handler 'app.handler/app
       :reload true
-      :port 8000)
+      :port 8000
+      :httpkit true
+      :init 'strap/jetty-init)
     (watch)
     (speak)
     (hoplon)
