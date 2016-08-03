@@ -7,7 +7,6 @@
                   [adzerk/boot-reload        "0.4.12"]
                   [compojure                 "1.6.0-beta1"]
                   [hoplon/boot-hoplon        "0.2.2"]
-                  [hoplon/castra             "3.0.0-alpha4"]
                   [hoplon                    "6.0.0-alpha16"]
                   [org.clojure/clojure       "1.9.0-alpha10"]
                   [org.clojure/clojurescript "1.9.93"]
