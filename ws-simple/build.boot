@@ -33,7 +33,8 @@
       :reload true
       :port 8000
       :httpkit true
-      :init 'strap/jetty-init)
+      ;:init 'strap/jetty-init
+      )
     (watch)
     (speak)
     (hoplon)
