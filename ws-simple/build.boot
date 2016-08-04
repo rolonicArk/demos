@@ -12,7 +12,6 @@
                   [org.clojure/clojurescript "1.9.93"]
                   [pandeiro/boot-http        "0.7.3"]
                   [http-kit "2.2.0"]
-                  [javax.servlet/servlet-api "2.5"]
                   [ring/ring-defaults        "0.2.1"]]
   :source-paths   #{"src"}
   :resource-paths #{"assets"})
