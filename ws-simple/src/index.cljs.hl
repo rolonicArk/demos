@@ -1,9 +1,20 @@
 (page "index.html"
-  (:require [app.rpc :as rpc]))
+      (:require [app.websocket :as rpc]))
 
-(defc= random rpc/random-number)
+(defc random nil)
 
-(rpc/init)
+(defmethod rpc/chsk-recv :simple/update
+           [id ran]
+           (reset! random ran))
+
+(defn get-state []
+      (rpc/chsk-send! [:simple/get-random {:resp-id :simple/update}]))
+
+(defn init []
+      (rpc/start!)
+      (js/setInterval get-state 1000))
+
+(init)
 
 (html
   (head
