@@ -30,8 +30,12 @@
                 ;(.log js/console (str "Handshake: " ?data))
                 ))
 
+(def opening (atom #(.log js/console "channel socket opened")))
+
 (defmethod event-msg-handler :chsk/state
            [{:as ev-msg :keys [?data]}]
+           (if (:open? (?data 1))
+             (@opening))
            (comment if (= ?data {:first-open? true})
                     (.log js/console "Channel socket successfully established!")
                     (.log js/console (str "Channel socket state change: " ?data))))
@@ -48,6 +52,7 @@
       (stop-router!)
       (reset! router_ (sente/start-chsk-router! ch-chsk event-msg-handler*)))
 
+(defn on-open [f] (reset! opening f))
 
 (defn start! []
       (start-router!))

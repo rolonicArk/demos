@@ -1,5 +1,6 @@
 (page "index.html"
-      (:require [clojure.string :as string]))
+      (:require [clojure.string :as string]
+                [app.websocket :as rpc]))
 
 (def my-contacts
   (cell #{{:first "Ben" :last "Bitdiddle" :email "benb@mit.edu"}
@@ -46,6 +47,10 @@
                   :disabled (cell= (not parsed))
                   label)
                 (pre (cell= (pr-str parsed))))))
+
+(rpc/on-open #(.log js/console 42))
+
+(rpc/start!)
 
 (html
   (head
