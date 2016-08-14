@@ -3,12 +3,7 @@
                 [app.websocket :as rpc]))
 
 (def my-contacts
-  (cell #{{:first "Ben" :last "Bitdiddle" :email "benb@mit.edu"}
-          {:first "Alyssa" :middle-initial "P" :last "Hacker" :email "aphacker@mit.edu"}
-          {:first "Eva" :middle "Lu" :last "Ator" :email "eval@mit.edu"}
-          {:first "Louis" :last "Reasoner" :email "prolog@mit.edu"}
-          {:first "Cy" :middle-initial "D" :last "Effect" :email "bugs@mit.edu"}
-          {:first "Lem" :middle-initial "E" :last "Tweakit" :email "morebugs@mit.edu"}}))
+  (cell #{}))
 
 (defn middle-name [{:keys [middle middle-initial]}]
       (cond
@@ -48,7 +43,14 @@
                   label)
                 (pre (cell= (pr-str parsed))))))
 
-(rpc/on-open #(.log js/console 42))
+(defmethod rpc/chsk-recv :contacts/initialize
+           [id contacts]
+           (reset! my-contacts contacts))
+
+(defn get-state []
+      (rpc/chsk-send! [:contacts/get-contacts {:resp-id :contacts/initialize}]))
+
+(rpc/on-open get-state)
 
 (rpc/start!)
 
