@@ -23,6 +23,12 @@
   (def connected-uids                connected-uids) ; Watchable, read-only atom
   )
 
+(defn broadcast [msg-id data]
+  (let [uids (:any @connected-uids)
+        msg [msg-id data]]
+    (doseq [uid uids]
+      (chsk-send! uid msg))))
+
 (c/defroutes app-routes
              (c/GET "/" req (response/content-type (response/resource-response "index.html") "text/html"))
              (route/resources "/" {:root ""})
