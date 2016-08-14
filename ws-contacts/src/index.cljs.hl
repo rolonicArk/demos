@@ -5,6 +5,12 @@
 (def my-contacts
   (cell #{}))
 
+(defn get-state []
+      (rpc/chsk-send! [:contacts/get-contacts {:resp-id :contacts/initialize}]))
+
+(defn delete-contact [contact]
+      (rpc/chsk-send! [:contacts/delete {:contact contact}]))
+
 (defn middle-name [{:keys [middle middle-initial]}]
       (cond
         middle (str " " middle)
@@ -16,7 +22,7 @@
 (defelem contact-list [{:keys [from sorted-by] :or {sorted-by identity}}]
          (loop-tpl :bindings [contact (cell= (sort-by sorted-by from))]
                    (li (span (cell= (display-name contact)))
-                       (button :click #(swap! from disj @contact) "Delete"))))
+                       (button :click #(delete-contact @contact) "Delete"))))
 
 (defn parse-contact [contact-str]
       (let [[first middle last :as parts] (string/split contact-str #"\s+")
@@ -47,8 +53,9 @@
            [id contacts]
            (reset! my-contacts contacts))
 
-(defn get-state []
-      (rpc/chsk-send! [:contacts/get-contacts {:resp-id :contacts/initialize}]))
+(defmethod rpc/chsk-recv :contacts/deleted
+           [id contact]
+           (swap! my-contacts disj contact))
 
 (rpc/on-open get-state)
 
