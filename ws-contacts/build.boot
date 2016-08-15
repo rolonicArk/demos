@@ -41,7 +41,7 @@
   []
   (comp
     (serve
-      :handler 'app.random/app
+      :handler 'app.contacts/app
       :reload true
       :port 8000
       :httpkit true

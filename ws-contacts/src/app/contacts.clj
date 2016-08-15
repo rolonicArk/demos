@@ -1,4 +1,4 @@
-(ns app.random
+(ns app.contacts
   (:require [app.handler :as handler]))
 
 (def app handler/routes)
@@ -20,3 +20,9 @@
   (let [contact (:contact ?data)]
     (swap! my-contacts disj contact)
     (handler/broadcast :contacts/deleted contact)))
+
+(defmethod handler/event-msg-handler :contacts/add
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
+  (let [contact (:contact ?data)]
+    (swap! my-contacts conj contact)
+    (handler/broadcast :contacts/added contact)))

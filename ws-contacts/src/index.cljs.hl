@@ -1,15 +1,18 @@
 (page "index.html"
       (:require [clojure.string :as string]
-                [app.websocket :as rpc]))
+                [app.websocket :as ws]))
 
 (def my-contacts
   (cell #{}))
 
 (defn get-state []
-      (rpc/chsk-send! [:contacts/get-contacts {:resp-id :contacts/initialize}]))
+      (ws/chsk-send! [:contacts/get-contacts {:resp-id :contacts/initialize}]))
 
 (defn delete-contact [contact]
-      (rpc/chsk-send! [:contacts/delete {:contact contact}]))
+      (ws/chsk-send! [:contacts/delete {:contact contact}]))
+
+(defn add-contact [contact]
+      (ws/chsk-send! [:contacts/add {:contact contact}]))
 
 (defn middle-name [{:keys [middle middle-initial]}]
       (cond
@@ -43,23 +46,27 @@
                   :input #(reset! new-contact @%))
                 (button
                   :click #(when-let [c @parsed]
-                                    (dosync (swap! to conj c)
+                                    (dosync (to c)
                                             (reset! new-contact "")))
                   :disabled (cell= (not parsed))
                   label)
                 (pre (cell= (pr-str parsed))))))
 
-(defmethod rpc/chsk-recv :contacts/initialize
+(defmethod ws/chsk-recv :contacts/initialize
            [id contacts]
            (reset! my-contacts contacts))
 
-(defmethod rpc/chsk-recv :contacts/deleted
+(defmethod ws/chsk-recv :contacts/deleted
            [id contact]
            (swap! my-contacts disj contact))
 
-(rpc/on-open get-state)
+(defmethod ws/chsk-recv :contacts/added
+           [id contact]
+           (swap! my-contacts conj contact))
 
-(rpc/start!)
+(ws/on-open get-state)
+
+(ws/start!)
 
 (html
   (head
@@ -67,7 +74,7 @@
   (body
     (h2 "Contact list")
     (ul (contact-list :from my-contacts :sorted-by :last))
-    (contact-input :to my-contacts "Add contact")
+    (contact-input :to add-contact "Add contact")
     (hr)
     (p (em "Note: The Add contact button is disabled until you enter a valid contact.  A valid contact consists of two or three whitespace-delimited names."))
     (a :href "https://github.com/tailrecursion/hoplon-demos/tree/master/contacts" "Source code on Github")))
