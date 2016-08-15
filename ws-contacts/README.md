@@ -1,7 +1,8 @@
 # ws-simple
 
-A [Hoplon][2] demo that shows a simple websocket example. It shows a Hello World! with
-random numbers that are generated on the server and transmited to the client.
+A [Hoplon][2] demo that shows a contacts websocket example. It shares a contacts list with any
+number of clients. Changes made by one client are immediately broadcast by the server to all
+other clients.
 
 See [Hoplon with Sente][5]
 
